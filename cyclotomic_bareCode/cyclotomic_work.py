@@ -6,7 +6,7 @@ def cyclotomic(m):
 	f=1
 	for i in range(m):
 		if gcd(i,m)==1:
-			f=f*(x-exp(2*pi*I/m*i))
+			f*=(x-exp(2*pi*I/m*i))
 	return f
 
 def cyclotomic_coeffs(m):
@@ -20,8 +20,15 @@ def subs_cos(exp,m):
 
 def cyclotomic_expand(m):
 	#f=collect(expand_trig(expand(cyclotomic(m)).expand(complex=True)),x)
-	f=collect(collect(expand(cyclotomic(m)),x).expand(complex=True),x)
-	for i in range(3,m+2,2):
+	#f=collect(collect(expand(cyclotomic(m)),x).expand(complex=True),x)
+	f=1
+	for i in range(m):
+		if gcd(i,m)==1:
+			f*=(x-exp(2*pi*I/m*i))
+			f=collect(expand(f),x)
+	#pprint(f)
+	f=collect(f.expand(complex=True),x)
+	for i in range(m,2,-2):
 		f=subs_cos(f,i)
 	return f
 
