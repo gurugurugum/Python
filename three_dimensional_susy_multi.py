@@ -23,5 +23,5 @@ zQ=sum([zetau[d]*Ql[d] for d in range(2)])
 ztQt=sum([zetatu[d]*Qtl[d] for d in range(2)])
 
 zzt=sum([zetau[d]*zetatl[d] for d in range(2)])
-zgztu=[sum([sum([zetau[d1]*gammaulu[i][d1][d2]*zetatl[d2] for d1 in range(2)]) for d2 in range(2)]) for i in range(3)]
+zguzt=[sum([sum([zetau[d1]*gammaulu[i][d1][d2]*zetatl[d2] for d1 in range(2)]) for d2 in range(2)]) for i in range(3)]
 
