@@ -21,6 +21,7 @@ Gammalll=[[[Rational(1,2)*(gll[i][k].diff(xu[j])+gll[i][j].diff(xu[k])-gll[j][k]
 Gammaull=[[[sum([guu[i][d]*Gammalll[d][j][k] for d in range(dim)]) for k in range(dim)] for j in range(dim)] for i in range(dim)]
 
 Rlllu=[[[[Gammaull[l][i][k].diff(xu[j]) - Gammaull[l][j][k].diff(xu[i]) + sum([Gammaull[d][i][k]*Gammaull[l][d][j] - Gammaull[d][j][k]*Gammaull[l][d][i] for d in range(dim)]) for l in range(dim)] for k in range(dim)] for j in range(dim)] for i in range(dim)]
+#Rlllu=[[[[Out[2][l][i][k].diff(a.xu[j]) - Out[2][l][j][k].diff(a.xu[i]) + sum([Out[2][d][i][k]*Out[2][l][d][j] - Out[2][d][j][k]*Out[2][l][d][i] for d in range(dim)]) for l in range(dim)] for k in range(dim)] for j in range(dim)] for i in range(dim)]
 
 Rll=[[sum([Rlllu[i][d][j][d] for d in range(dim)]) for j in range(dim)] for i in range(dim)]
 
