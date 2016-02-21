@@ -46,6 +46,11 @@ eta_bu=epsilon_bubu*eta_bl
 etat_bl=Matrix([Function('eta'+'tilde'+str(i))(*x_mu) for i in range(2)])
 etat_bu=epsilon_bubu*etat_bl
 
+e_z=[eta_bl[0]*zeta_bl[0],eta_bl[0]*zeta_bl[1],eta_bl[1]*zeta_bl[0],eta_bl[1]*zeta_bl[1]]
+ezs=[Symbol('ez'),Symbol('egz1'),Symbol('egz2'),Symbol('egz3')]
+
+et_z=[etat_bl[0]*zeta_bl[0],etat_bl[0]*zeta_bl[1],etat_bl[1]*zeta_bl[0],etat_bl[1]*zeta_bl[1]]
+etzs=[Symbol('etz'),Symbol('etgz1'),Symbol('etgz2'),Symbol('etgz3')]
 
 Q_bl=Matrix([Operator('Q'+str(i)) for i in range(2)])
 Q_bu=epsilon_bubu*Q_bl
