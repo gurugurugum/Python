@@ -10,10 +10,10 @@ def coderiv_spinor_low(s):
 	return [Matrix([s[b].diff(x_mu[m])-Rational(1,4)*I*(oeg[m]*s)[b] for b in range(2)]) for m in range(3)]
 
 def coderiv_contraVector(v):
-	return [Matrix([v[n].diff(x_mu[m])+sum([Chris_mumlml[n][m][d]*v[d] for d in range(3)]) for n in range(3)]) for m in range(3)]
+	return [[v[n].diff(x_mu[m])+sum([Chris_mumlml[n][m][d]*v[d] for d in range(3)] for n in range(3)]) for m in range(3)]
 
 def coderiv_coVector(v):
-	return [Matrix([v[n].diff(x_mu[m])-sum([Chris_mumlml[d][m][n]*v[d] for d in range(3)]) for n in range(3)]) for m in range(3)]
+	return [[v[n].diff(x_mu[m])-sum([Chris_mumlml[d][m][n]*v[d] for d in range(3)] for n in range(3)]) for m in range(3)]
 
 #def coderiv_tensor(t,indType):
 
