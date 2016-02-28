@@ -76,10 +76,10 @@ etQtsigma=-etat_bu.T*lambda_bl+I*(z-r*H)*etat_bu.T*chit_bl
 
 #tranformation of lambda
 zQlambda_bl=(I*(D+sigma*H)*eye(2)-MatAdd(*[((z-r*H)*a_mu[i]+I*sum([sum([epsilon_mumumu[i][j][k]*D_coVector(a_ml)[j][k] for j in range(3)]) for k in range(3)])+I*sum([g_mumu[i,j]*(D_scalar(sigma)[j]-V_ml[j]) for j in range(3)]))*gamma_ml[i] for i in range(3)]).doit())*zeta_bl
-ztQtlambda_bl=0
+ztQtlambda_bl=[0,0]
 
 #tranformation of lambda-tilde
-zQlambdat_bl=0
+zQlambdat_bl=[0,0]
 ztQtlambdat_bl=(I*(D+sigma*H)*eye(2)-MatAdd(*[((z-r*H)*a_mu[i]-I*sum([sum([epsilon_mumumu[i][j][k]*D_coVector(a_ml)[j][k] for j in range(3)]) for k in range(3)])+I*sum([g_mumu[i,j]*(D_scalar(sigma)[j]+V_ml[j]) for j in range(3)]))*gamma_ml[i] for i in range(3)]).doit())*zetat_bl
 
 #tranformation of D
