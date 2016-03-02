@@ -30,6 +30,10 @@ lambda_bl=Matrix([Function('lambda'+str(i))(*x_mu) for i in range(2)])
 lambdat_bl=Matrix([Function('lambda'+'tilde'+str(i))(*x_mu) for i in range(2)])
 D=Function('D')(*x_mu)
 
+#differential equations of zeta and zeta-tilde
+diffz=[Rational(1,4)*I*(MatAdd(*[MatAdd(*[MatAdd(*[omega_mlalau[i][d1][d2]*LeviCivita(d1+1,d2+1,d3+1)*gamma_au[d3] for d1 in range(3)]).doit() for d2 in range(3)]).doit() for d3 in range(3)]).doit())*zeta_bl+I*(A_ml[i]-V_ml[i])*zeta_bl-Rational(1,2)*(H*gamma_ml[i]+MatAdd(*[sum([sum([epsilon_mlmlml[i][d1][d2]*g_mumu[d1,d3]*V_ml[d3] for d1 in range(3)]) for d3 in range(3)])*gamma_mu[d2] for d2 in range(3)]).doit())*zeta_bl for i in range(3)]
+diffzt=[Rational(1,4)*I*(MatAdd(*[MatAdd(*[MatAdd(*[omega_mlalau[i][d1][d2]*LeviCivita(d1+1,d2+1,d3+1)*gamma_au[d3] for d1 in range(3)]).doit() for d2 in range(3)]).doit() for d3 in range(3)]).doit())*zetat_bl-I*(A_ml[i]-V_ml[i])*zetat_bl-Rational(1,2)*(H*gamma_ml[i]-MatAdd(*[sum([sum([epsilon_mlmlml[i][d1][d2]*g_mumu[d1,d3]*V_ml[d3] for d1 in range(3)]) for d3 in range(3)])*gamma_mu[d2] for d2 in range(3)]).doit())*zetat_bl for i in range(3)]
+
 #tranformation of C
 zQC=I*zeta_bu.T*chi_bl
 ztQtC=-I*zetat_bu.T*chit_bl

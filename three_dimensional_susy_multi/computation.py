@@ -64,5 +64,21 @@ zQztQtpztQtzQC=(ztQtC.subs(chit_bl[0],zQchit_bl[0]).subs(chit_bl[1],zQchit_bl[1]
 
 twoILiedCpzztzmrHC=2*I*(sum([(zeta_bu.T*gamma_mu[d]*zetat_bl)[0]*D_scalar(C)[d] for d in range(3)])+(zeta_bu.T*zetat_bl)[0]*(z-r*H)*C)
 
+zQztQtpztQtzQsigma=(ztQtsigma.subs(lambda_bl[0],zQlambda_bl[0]).subs(lambda_bl[1],zQlambda_bl[1]).subs(chit_bl[0],zQchit_bl[0]).subs(chit_bl[1],zQchit_bl[1])+zQsigma.subs(lambdat_bl[0],ztQtlambdat_bl[0]).subs(lambdat_bl[1],ztQtlambdat_bl[1]).subs(chi_bl[0],ztQtchi_bl[0]).subs(chi_bl[1],ztQtchi_bl[1]))[0]
+
+twoILiedsigmapzztzmrHsigma=2*I*(sum([(zeta_bu.T*gamma_mu[d]*zetat_bl)[0]*D_scalar(sigma)[d] for d in range(3)])+(zeta_bu.T*zetat_bl)[0]*(z-r*H)*sigma)
+
+zQztQtpztQtzQD=(ztQtD.subs(lambda_bl[0],zQlambda_bl[0]).subs(lambda_bl[1],zQlambda_bl[1]).subs(chit_bl[0],zQchit_bl[0]).subs(chit_bl[1],zQchit_bl[1])+zQD.subs(lambdat_bl[0],ztQtlambdat_bl[0]).subs(lambdat_bl[1],ztQtlambdat_bl[1]).subs(chi_bl[0],ztQtchi_bl[0]).subs(chi_bl[1],ztQtchi_bl[1]))[0].subs(zeta_bl[0].diff(x_mu[0]),diffz[0][0]).subs(zeta_bl[1].diff(x_mu[0]),diffz[0][1]).subs(zeta_bl[0].diff(x_mu[1]),diffz[1][0]).subs(zeta_bl[1].diff(x_mu[1]),diffz[1][1]).subs(zeta_bl[0].diff(x_mu[2]),diffz[2][0]).subs(zeta_bl[1].diff(x_mu[2]),diffz[2][1])
+
+twoILiedDpzztzmrHD=2*I*(sum([(zeta_bu.T*gamma_mu[d]*zetat_bl)[0]*D_scalar(D)[d] for d in range(3)])+(zeta_bu.T*zetat_bl)[0]*(z-r*H)*D)
+
+
+
+
+
+
+
+
+
 
 
