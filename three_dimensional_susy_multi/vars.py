@@ -34,7 +34,7 @@ omega_mlalau=[[[sum([e_mlau[d,k]*e_almu[j,d].diff(x_mu[i]) for d in range(3)]) +
 
 R_mlmlalau=[[[[omega_mlalau[j][k][l].diff(x_mu[i])-omega_mlalau[i][k][l].diff(x_mu[j])+sum([omega_mlalau[j][k][d]*omega_mlalau[i][d][l]-omega_mlalau[i][k][d]*omega_mlalau[j][d][l] for d in range(3)]) for l in range(3)] for k in range(3)] for j in range(3)] for i in range(3)]
 R_mlml=[[sum([sum([R_mlmlalau[i][d1][j][d2]*e_almu[d2,d1] for d1 in range(3)]) for d2 in range(3)]) for j in range(3)] for i in range(3)]
-R=sum([sum([g_mumu[d1,d2]*R_mlml[d1][d2] for d1 in range(3)])for d2 in range(3)])
+R=sum([sum([g_mumu[d1,d2]*R_mlml[d1][d2] for d1 in range(3)]) for d2 in range(3)])
 
 zeta_bl=Matrix([Function('zeta'+str(i))(*x_mu) for i in range(2)])
 zeta_bu=epsilon_bubu*zeta_bl

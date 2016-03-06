@@ -16,7 +16,11 @@ def cyclotomic_coeffs(m):
 #.subs(cos(pi/m),-sum([cos(pi/m*i) for i in range(3,m,2)])+1/2)
 
 def subs_cos(exp,m):
-	return exp.subs(cos(pi/m),-sum([cos(pi/m*i) for i in range(3,m,2)])+Rational(1,2))
+	#	if m%2 != 1:
+	#	return exp
+	coeffs=poly(expand_trig(cos(Rational(m+1,2)*x)+cos(Rational(m-1,2)*x)),cos(x)).all_coeffs()
+	value=Rational(coeffs[1],coeffs[0])
+	return exp.subs(cos(pi/m),-sum([cos(pi/m*i) for i in range(3,m,2)])-value+1)
 
 def cyclotomic_expand(m):
 	#f=collect(expand_trig(expand(cyclotomic(m)).expand(complex=True)),x)
@@ -28,8 +32,9 @@ def cyclotomic_expand(m):
 			f=collect(expand(f),x)
 	#pprint(f)
 	f=collect(f.expand(complex=True),x)
-	for i in range(m,2,-2):
-		f=subs_cos(f,i)
+	if m%2 == 1:
+		for i in range(m,2,-2):
+			f=subs_cos(f,i)
 	return f
 
 def coprime_sum(m):

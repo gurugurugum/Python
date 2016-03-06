@@ -60,6 +60,26 @@ def zQ(exp):
 	exp=exp.subs(D,toDummy(zQD))
 	return fromDummy(exp)
 
+def subsDiffZ(exp):
+	retVal = exp
+	retVal = retVal.subs(zeta_bl[0].diff(x_mu[0]),diffz[0][0])
+	retVal = retVal.subs(zeta_bl[1].diff(x_mu[0]),diffz[0][1])
+	retVal = retVal.subs(zeta_bl[0].diff(x_mu[1]),diffz[1][0])
+	retVal = retVal.subs(zeta_bl[1].diff(x_mu[1]),diffz[1][1])
+	retVal = retVal.subs(zeta_bl[0].diff(x_mu[2]),diffz[2][0])
+	retVal = retVal.subs(zeta_bl[1].diff(x_mu[2]),diffz[2][1])
+	return retVal
+
+def subsDiffZt(exp):
+	retVal = exp
+	retVal = retVal.subs(zetat_bl[0].diff(x_mu[0]),diffzt[0][0])
+	retVal = retVal.subs(zetat_bl[1].diff(x_mu[0]),diffzt[0][1])
+	retVal = retVal.subs(zetat_bl[0].diff(x_mu[1]),diffzt[1][0])
+	retVal = retVal.subs(zetat_bl[1].diff(x_mu[1]),diffzt[1][1])
+	retVal = retVal.subs(zetat_bl[0].diff(x_mu[2]),diffzt[2][0])
+	retVal = retVal.subs(zetat_bl[1].diff(x_mu[2]),diffzt[2][1])
+	return retVal
+
 zQztQtpztQtzQC=(ztQtC.subs(chit_bl[0],zQchit_bl[0]).subs(chit_bl[1],zQchit_bl[1])+zQC.subs(chi_bl[0],ztQtchi_bl[0]).subs(chi_bl[1],ztQtchi_bl[1]))[0]
 
 twoILiedCpzztzmrHC=2*I*(sum([(zeta_bu.T*gamma_mu[d]*zetat_bl)[0]*D_scalar(C)[d] for d in range(3)])+(zeta_bu.T*zetat_bl)[0]*(z-r*H)*C)
@@ -68,11 +88,13 @@ zQztQtpztQtzQsigma=(ztQtsigma.subs(lambda_bl[0],zQlambda_bl[0]).subs(lambda_bl[1
 
 twoILiedsigmapzztzmrHsigma=2*I*(sum([(zeta_bu.T*gamma_mu[d]*zetat_bl)[0]*D_scalar(sigma)[d] for d in range(3)])+(zeta_bu.T*zetat_bl)[0]*(z-r*H)*sigma)
 
-zQztQtpztQtzQD=(ztQtD.subs(lambda_bl[0],zQlambda_bl[0]).subs(lambda_bl[1],zQlambda_bl[1]).subs(chit_bl[0],zQchit_bl[0]).subs(chit_bl[1],zQchit_bl[1])+zQD.subs(lambdat_bl[0],ztQtlambdat_bl[0]).subs(lambdat_bl[1],ztQtlambdat_bl[1]).subs(chi_bl[0],ztQtchi_bl[0]).subs(chi_bl[1],ztQtchi_bl[1]))[0].subs(zeta_bl[0].diff(x_mu[0]),diffz[0][0]).subs(zeta_bl[1].diff(x_mu[0]),diffz[0][1]).subs(zeta_bl[0].diff(x_mu[1]),diffz[1][0]).subs(zeta_bl[1].diff(x_mu[1]),diffz[1][1]).subs(zeta_bl[0].diff(x_mu[2]),diffz[2][0]).subs(zeta_bl[1].diff(x_mu[2]),diffz[2][1]).subs(zetat_bl[0].diff(x_mu[0]),diffzt[0][0]).subs(zetat_bl[1].diff(x_mu[0]),diffzt[0][1]).subs(zetat_bl[0].diff(x_mu[1]),diffzt[1][0]).subs(zetat_bl[1].diff(x_mu[1]),diffzt[1][1]).subs(zetat_bl[0].diff(x_mu[2]),diffzt[2][0]).subs(zetat_bl[1].diff(x_mu[2]),diffzt[2][1])
+#zQztQtpztQtzQD=(ztQtD.subs(lambda_bl[0],zQlambda_bl[0]).subs(lambda_bl[1],zQlambda_bl[1]).subs(chit_bl[0],zQchit_bl[0]).subs(chit_bl[1],zQchit_bl[1])+zQD.subs(lambdat_bl[0],ztQtlambdat_bl[0]).subs(lambdat_bl[1],ztQtlambdat_bl[1]).subs(chi_bl[0],ztQtchi_bl[0]).subs(chi_bl[1],ztQtchi_bl[1])).subs(zeta_bl[0].diff(x_mu[0]),diffz[0][0]).subs(zeta_bl[1].diff(x_mu[0]),diffz[0][1]).subs(zeta_bl[0].diff(x_mu[1]),diffz[1][0]).subs(zeta_bl[1].diff(x_mu[1]),diffz[1][1]).subs(zeta_bl[0].diff(x_mu[2]),diffz[2][0]).subs(zeta_bl[1].diff(x_mu[2]),diffz[2][1]).subs(zetat_bl[0].diff(x_mu[0]),diffzt[0][0]).subs(zetat_bl[1].diff(x_mu[0]),diffzt[0][1]).subs(zetat_bl[0].diff(x_mu[1]),diffzt[1][0]).subs(zetat_bl[1].diff(x_mu[1]),diffzt[1][1]).subs(zetat_bl[0].diff(x_mu[2]),diffzt[2][0]).subs(zetat_bl[1].diff(x_mu[2]),diffzt[2][1])
 
-twoILiedDpzztzmrHD=2*I*(sum([(zeta_bu.T*gamma_mu[d]*zetat_bl)[0]*D_scalar(D)[d] for d in range(3)])+(zeta_bu.T*zetat_bl)[0]*(z-r*H)*D)
+zQztQtpztQtzQD=subsDiffZt(subsDiffZ(ztQtD.subs(lambda_bl[0],zQlambda_bl[0]).subs(lambda_bl[1],zQlambda_bl[1]).subs(chit_bl[0],zQchit_bl[0]).subs(chit_bl[1],zQchit_bl[1])+zQD.subs(lambdat_bl[0],ztQtlambdat_bl[0]).subs(lambdat_bl[1],ztQtlambdat_bl[1]).subs(chi_bl[0],ztQtchi_bl[0]).subs(chi_bl[1],ztQtchi_bl[1])))
 
+#twoILiedDpzztzmrHD=2*I*(sum([(zeta_bu.T*gamma_mu[d]*zetat_bl)[0]*D_scalar(D)[d] for d in range(3)])+(zeta_bu.T*zetat_bl)[0]*(z-r*H)*D)
 
+zeroOfD=simplify(zQztQtpztQtzQD - twoILiedDpzztzmrHD)
 
 
 
