@@ -22,3 +22,7 @@ def Liederiv_spinor_low(conV,s):
 	vector_coderiv_part=MatAdd(*[MatAdd(*[MatAdd(*[sum([coderiv_contraVector(conV)[m][d]*g_mlml[d,n] for d in range(3)])*epsilon_mumumu[m][n][r]*gamma_ml[r] for r in range(3)]).doit() for n in range(3)]).doit() for m in range(3)]).doit()*s
 	return spinor_coderiv_part+Rational(1,4)*I*vector_coderiv_part
 
+def Liederiv_coVector(conV,coV):
+	coV_coderiv_part=[sum([conV[d]*coderiv_coVector(coV)[d][i] for d in range(3)]) for i in range(3)]
+	conV_coderiv_part=[sum([coV[d]*coderiv_contraVector(conV)[i][d] for d in range(3)]) for i in range(3)]
+	return [coV_coderiv_part[i]+conV_coderiv_part[i] for i in range(3)]

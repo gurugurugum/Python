@@ -35,10 +35,10 @@ diffz=[Rational(1,4)*I*(MatAdd(*[MatAdd(*[MatAdd(*[omega_mlalau[i][d1][d2]*LeviC
 diffzt=[Rational(1,4)*I*(MatAdd(*[MatAdd(*[MatAdd(*[omega_mlalau[i][d1][d2]*LeviCivita(d1+1,d2+1,d3+1)*gamma_au[d3] for d1 in range(3)]).doit() for d2 in range(3)]).doit() for d3 in range(3)]).doit())*zetat_bl-I*(A_ml[i]-V_ml[i])*zetat_bl-Rational(1,2)*(H*gamma_ml[i]-MatAdd(*[sum([sum([epsilon_mlmlml[i][d1][d2]*g_mumu[d1,d3]*V_ml[d3] for d1 in range(3)]) for d3 in range(3)])*gamma_mu[d2] for d2 in range(3)]).doit())*zetat_bl for i in range(3)]
 
 #tranformation of C
-zQC=I*zeta_bu.T*chi_bl
-ztQtC=-I*zetat_bu.T*chit_bl
-eQC=I*eta_bu.T*chi_bl
-etQtC=-I*etat_bu.T*chit_bl
+zQC=I*(zeta_bu.T*chi_bl)[0]
+ztQtC=-I*(zetat_bu.T*chit_bl)[0]
+eQC=I*(eta_bu.T*chi_bl)[0]
+etQtC=-I*(etat_bu.T*chit_bl)[0]
 
 #tranformation of chi
 zQchi_bl=M*zeta_bl
@@ -67,16 +67,16 @@ eQMt=2*(eta_bu.T*lambda_bl)[0]-2*I*(z-(r+2)*H)*(eta_bu.T*chit_bl)[0]-2*I*sum([D_
 etQtM=0
 
 #tranformation of a_ml
-zQa_ml=[-I*zeta_bu.T*gamma_mu[i]*lambdat_bl+D_scalar(zeta_bu.T*chi_bl)[i] for i in range(3)]
-ztQta_ml=[I*zetat_bu.T*gamma_mu[i]*lambda_bl+D_scalar(zetat_bu.T*chit_bl)[i] for i in range(3)]
-eQa_ml=[-I*eta_bu.T*gamma_mu[i]*lambdat_bl+D_scalar(eta_bu.T*chi_bl)[i] for i in range(3)]
-etQta_ml=[I*etat_bu.T*gamma_mu[i]*lambda_bl+D_scalar(etat_bu.T*chit_bl)[i] for i in range(3)]
+zQa_ml=[-I*(zeta_bu.T*gamma_mu[i]*lambdat_bl)[0]+D_scalar((zeta_bu.T*chi_bl)[0])[i] for i in range(3)]
+ztQta_ml=[I*(zetat_bu.T*gamma_mu[i]*lambda_bl)[0]+D_scalar((zetat_bu.T*chit_bl)[0])[i] for i in range(3)]
+eQa_ml=[-I*(eta_bu.T*gamma_mu[i]*lambdat_bl)[0]+D_scalar((eta_bu.T*chi_bl)[0])[i] for i in range(3)]
+etQta_ml=[I*(etat_bu.T*gamma_mu[i]*lambda_bl)[0]+D_scalar((etat_bu.T*chit_bl)[0])[i] for i in range(3)]
 
 #tranformation of sigma
-zQsigma=-zeta_bu.T*lambdat_bl+I*(z-r*H)*zeta_bu.T*chi_bl
-ztQtsigma=-zetat_bu.T*lambda_bl+I*(z-r*H)*zetat_bu.T*chit_bl
-eQsigma=-eta_bu.T*lambdat_bl+I*(z-r*H)*eta_bu.T*chi_bl
-etQtsigma=-etat_bu.T*lambda_bl+I*(z-r*H)*etat_bu.T*chit_bl
+zQsigma=(-zeta_bu.T*lambdat_bl+I*(z-r*H)*zeta_bu.T*chi_bl)[0]
+ztQtsigma=(-zetat_bu.T*lambda_bl+I*(z-r*H)*zetat_bu.T*chit_bl)[0]
+eQsigma=(-eta_bu.T*lambdat_bl+I*(z-r*H)*eta_bu.T*chi_bl)[0]
+etQtsigma=(-etat_bu.T*lambda_bl+I*(z-r*H)*etat_bu.T*chit_bl)[0]
 
 #tranformation of lambda
 zQlambda_bl=(I*(D+sigma*H)*eye(2)-MatAdd(*[((z-r*H)*a_mu[i]+I*sum([sum([epsilon_mumumu[i][j][k]*D_coVector(a_ml)[j][k] for j in range(3)]) for k in range(3)])+I*sum([g_mumu[i,j]*(D_scalar(sigma)[j]-V_ml[j]) for j in range(3)]))*gamma_ml[i] for i in range(3)]).doit())*zeta_bl
