@@ -35,7 +35,7 @@ def subsDiffZt(exp):
 
 
 #--- chi ---
-zQztQtpztQtzQchi=Matrix([subsDiffZ( ztQtchi_bl[i].subs(sigma,zQsigma).subs(C,zQC).subs(a_ml[0],zQa_ml[0]).subs(a_ml[1],zQa_ml[1]).subs(a_ml[2],zQa_ml[2]) ) + zQchi_bl[i].subs(M,ztQtM) for i in range(2)])
+zQztQtpztQtzQchi=Matrix([subsDiffZ( ztQtchi_bl[i].subs(sigma,zQsigma).subs(C,zQC).subs(a_ml[0],zQa_ml[0]).subs(a_ml[1],zQa_ml[1]).subs(a_ml[2],zQa_ml[2]).doit() ) + zQchi_bl[i].subs(M,ztQtM) for i in range(2)])
 
 twoILiedchipzztzmrHchi=2*I*(Liederiv_spinor_low([(zeta_bu.T*gamma_mu[i]*zetat_bl)[0] for i in range(3)],chi_bl)+sum([(zeta_bu.T*gamma_mu[d]*zetat_bl)[0]*(-I*r*(A_ml[d]-Rational(1,2)*V_ml[d])-I*z*C_ml[d]) for d in range(3)])*chi_bl+(zeta_bu.T*zetat_bl)[0]*(z-r*H)*chi_bl)
 
