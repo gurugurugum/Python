@@ -19,7 +19,7 @@ def func(y, t):
 	return [-sum([sum([Gammaull[0][i][j].subs(xu[0], y[2]).subs(xu[1], y[3])*y[i]*y[j] for i in range(2)]) for j in range(2)]), -sum([sum([Gammaull[1][i][j].subs(xu[0], y[2]).subs(xu[1], y[3])*y[i]*y[j] for i in range(2)]) for j in range(2)]), y[0], y[1]]
 
 x0=[1, 0]
-theta0=math.pi*3/2
+theta0=math.pi*1/2
 v0=[math.cos(theta0), math.sin(theta0)]
 mag=sum([sum([gll[d1][d2].subs(xu[0], x0[0]).subs(xu[1], x0[1])*v0[d1]*v0[d2] for d1 in range(2)]) for d2 in range(2)])
 v0=list(map(lambda n:n/math.sqrt(mag), v0))
