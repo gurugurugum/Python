@@ -25,7 +25,7 @@ def euclidDistance3D(a, b):
 	return math.sqrt((a[0] - b[0]) ** 2 + (a[1] - b[1]) ** 2 + (z.subs(xu[0], a[0]).subs(xu[1], a[1]) - z.subs(xu[0], b[0]).subs(xu[1], b[1])) ** 2)
 
 def firstMinimaOnTraj(goal, traj):
-	beforeDistance = searchRange ** 2
+	beforeDistance = float("inf")
 	currentDistance = 0.0
 	for	i in range(len(traj[:, 0])):
 		currentDistance = euclidDistance3D(goal, traj[i, 2:])
@@ -33,10 +33,10 @@ def firstMinimaOnTraj(goal, traj):
 			beforeDistance = currentDistance
 		else:
 			return [beforeDistance, i * step]
-	return [searchRange ** 2, searchRange ** 2]
+	return [float("inf"), float("inf")]
 
 def firstMiximaOnTraj(goal, traj):
-	beforeDistance = searchRange ** 2
+	beforeDistance = float("inf")
 	currentDistance = 0.0
 	pos = 0
 	for	i in range(len(traj[:, 0])):
@@ -53,10 +53,10 @@ def firstMiximaOnTraj(goal, traj):
 			beforeDistance = currentDistance
 		else:
 			return [beforeDistance, i * step]
-	return [searchRange ** 2, searchRange ** 2]
+	return [float("inf"), float("inf")]
 
 def secondMinimaOnTraj(goal, traj):
-	beforeDistance = searchRange ** 2
+	beforeDistance = float("inf")
 	currentDistance = 0.0
 	pos = 0
 	for	i in range(len(traj[:, 0])):
@@ -81,15 +81,15 @@ def secondMinimaOnTraj(goal, traj):
 			beforeDistance = currentDistance
 		else:
 			return [beforeDistance, i * step]
-	return [searchRange ** 2, searchRange ** 2]
+	return [float("inf"), float("inf")]
 
-def unitVecOfDirection(theta):
+def unitVecOfDirection(theta, place):
 	v0 = [math.cos(theta), math.sin(theta)]
-	mag = sum([sum([gll[d1][d2].subs(xu[0], start[0]).subs(xu[1], start[1]) * v0[d1] * v0[d2] for d1 in range(2)]) for d2 in range(2)])
+	mag = sum([sum([gll[d1][d2].subs(xu[0], place[0]).subs(xu[1], place[1]) * v0[d1] * v0[d2] for d1 in range(2)]) for d2 in range(2)])
 	return list(map(lambda n:n / math.sqrt(mag), v0))
 
 def firstMinimaOrSecondMinima(start, theta, t, goal):
-	v0 = unitVecOfDirection(theta)
+	v0 = unitVecOfDirection(theta, start)
 	y0 = v0 + start
 	traj = odeint(func, y0, t)
 	
@@ -102,7 +102,7 @@ def firstMinimaOrSecondMinima(start, theta, t, goal):
 		return 1
 
 def positiveRotOrNegativeRot(start, theta, angleStep, t, goal, fOS):
-	v0 = unitVecOfDirection(theta + angleStep)
+	v0 = unitVecOfDirection(theta + angleStep, start)
 	y0 = v0 + start
 	trajP = odeint(func, y0, t)
 	mOTP = [0, 0]
@@ -111,7 +111,7 @@ def positiveRotOrNegativeRot(start, theta, angleStep, t, goal, fOS):
 	else:
 		mOTP = secondMinimaOnTraj(goal, trajP)
 
-	v0 = unitVecOfDirection(theta - angleStep)
+	v0 = unitVecOfDirection(theta - angleStep, start)
 	y0 = v0 + start
 	trajN = odeint(func, y0, t)
 	mOTN = [0, 0]
@@ -125,13 +125,13 @@ def positiveRotOrNegativeRot(start, theta, angleStep, t, goal, fOS):
 	else:
 		return -1
 
+start = [5, 0]
+goal = [-5, 0]
+theta = math.atan2(goal[1] - start[1], goal[0] - start[0])
+
 searchRange = euclidDistance3D(start, goal) ** 2
 step = 0.01
 t = np.arange(0, searchRange, step)
-
-start = [5, 0]
-goal = [0, 5]
-theta = math.atan2(goal[1] - start[1], goal[0] - start[0])
 
 angleStep = 0.1
 angleStepStep = 0.1
@@ -141,7 +141,7 @@ result = 0.0
 fOS = firstMinimaOrSecondMinima(start, theta, t, goal)
 angleStep = angleStep * positiveRotOrNegativeRot(start, theta, angleStep, t, goal, fOS)
 for i in range(10000):
-	v0 = unitVecOfDirection(theta)
+	v0 = unitVecOfDirection(theta, start)
 	y0 = v0 + start
 	traj = odeint(func, y0, t)
 	
@@ -153,8 +153,9 @@ for i in range(10000):
 	currentDistance = mOT[0]
 	distanceFromStart = mOT[1]
 	result = distanceFromStart
-	print(firstMinimaOnTraj(goal, traj)[0])
-	print(secondMinimaOnTraj(goal, traj)[0])
+	print(currentDistance)
+#	print(firstMinimaOnTraj(goal, traj)[0])
+#	print(secondMinimaOnTraj(goal, traj)[0])
 	if currentDistance < beforeDistance:
 		beforeDistance = currentDistance
 		theta += angleStep
@@ -166,7 +167,7 @@ for i in range(10000):
 		theta += angleStep
 print(result)
 
-v0 = unitVecOfDirection(theta)
+v0 = unitVecOfDirection(theta, start)
 y0 = v0 + start
 t = np.arange(0, result, step)
 traj = odeint(func, y0, t)
