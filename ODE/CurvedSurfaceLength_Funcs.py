@@ -125,8 +125,6 @@ def firstMinimaOrSecondMinima(start, theta, t, goal):
 	y0 = v0 + start
 	traj = odeint(func, y0, t)
 	
-	#	fMOT = firstMinimaOnTraj(goal, traj, t[1] - t[0])
-	#	sMOT = secondMinimaOnTraj(goal, traj, t[1] - t[0])
 	fMOT = findNthMinimaOnTraj(0, traj, goal)
 	sMOT = findNthMinimaOnTraj(1, traj, goal)
 	
@@ -139,22 +137,14 @@ def positiveRotOrNegativeRot(start, theta, angleStep, t, goal, fOS):
 	v0 = unitVecOfDirection(theta + angleStep, start)
 	y0 = v0 + start
 	trajP = odeint(func, y0, t)
-	mOTP = [0, 0]
-	if fOS == 0:
-		mOTP = firstMinimaOnTraj(goal, trajP, t[1] - t[0])
-	else:
-		mOTP = secondMinimaOnTraj(goal, trajP, t[1] - t[0])
+	mOTP = findNthMinimaOnTraj(fOS, trajP, goal)
 	
 	v0 = unitVecOfDirection(theta - angleStep, start)
 	y0 = v0 + start
 	trajN = odeint(func, y0, t)
-	mOTN = [0, 0]
-	if fOS == 0:
-		mOTN = firstMinimaOnTraj(goal, trajN, t[1] - t[0])
-	else:
-		mOTN = secondMinimaOnTraj(goal, trajN, t[1] - t[0])
+	mOTN = findNthMinimaOnTraj(fOS, trajN, goal)
 	
-	if mOTP[0] < mOTN[0]:
+	if mOTP[1] < mOTN[1]:
 		return +1
 	else:
 		return -1

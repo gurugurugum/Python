@@ -23,14 +23,10 @@ while 1:
 	y0 = v0 + start
 	traj = odeint(func, y0, t)
 	
-	mOT = [0, 0]
-	if fOS == 0:
-		mOT = firstMinimaOnTraj(goal, traj, t[1] - t[0])
-	else:
-		mOT = secondMinimaOnTraj(goal, traj, t[1] - t[0])
-	currentDistance = mOT[0]
-	distanceFromStart = mOT[1]
+	mOT = findNthMinimaOnTraj(fOS, traj, goal)
+	distanceFromStart = mOT[0] * step
 	result = distanceFromStart
+	currentDistance = mOT[1]
 	print(currentDistance)
 #	print(firstMinimaOnTraj(goal, traj)[0])
 #	print(secondMinimaOnTraj(goal, traj)[0])
