@@ -20,11 +20,14 @@ Gammaull = [[[sum([guu[i][d] * Gammalll[d][j][k] for d in range(2)]) for k in ra
 def func(y, t):
 	return [-sum([sum([Gammaull[0][i][j].subs(xu[0], y[2]).subs(xu[1], y[3]) * y[i] * y[j] for i in range(2)]) for j in range(2)]), -sum([sum([Gammaull[1][i][j].subs(xu[0], y[2]).subs(xu[1], y[3]) * y[i] * y[j] for i in range(2)]) for j in range(2)]), y[0], y[1]]
 
+def euclidDistance3D(a, b):
+	return math.sqrt((a[0] - b[0]) ** 2 + (a[1] - b[1]) ** 2 + (z.subs(xu[0], a[0]).subs(xu[1], a[1]) - z.subs(xu[0], b[0]).subs(xu[1], b[1])) ** 2)
+
 def firstMinimaOnTraj(goal, traj):
-	beforeDistance = searchDistance ** 2
+	beforeDistance = searchRange ** 2
 	currentDistance = 0.0
 	for	i in range(len(traj[:, 0])):
-		currentDistance = math.sqrt((goal[0] - traj[i,2]) ** 2 + (goal[1] - traj[i,3]) ** 2 + (z.subs(xu[0], goal[0]).subs(xu[1], goal[1]) - z.subs(xu[0], traj[i,2]).subs(xu[1], traj[i,3])) ** 2)
+		currentDistance = euclidDistance3D(goal, traj[i, 2:])
 		if currentDistance < beforeDistance:
 			beforeDistance = currentDistance
 		else:
@@ -36,9 +39,9 @@ def unitVecOfDirection(theta):
 	mag = sum([sum([gll[d1][d2].subs(xu[0], start[0]).subs(xu[1], start[1]) * v0[d1] * v0[d2] for d1 in range(2)]) for d2 in range(2)])
 	return list(map(lambda n:n / math.sqrt(mag), v0))
 
-searchDistance = 100
+searchRange = euclidDistance3D(start, goal) ** 2
 step = 0.01
-t = np.arange(0, searchDistance, step)
+t = np.arange(0, searchRange, step)
 
 start = [5, 0]
 goal = [9, 1]
@@ -46,7 +49,7 @@ theta = math.atan2(goal[1] - start[1], goal[0] - start[0])
 
 angleStep = 0.1
 angleStepStep = 0.1
-beforeDistance = searchDistance ** 2
+beforeDistance = searchRange ** 2
 currentDistance = 0.0
 result = 0.0
 for i in range(int(70 / angleStep)):
