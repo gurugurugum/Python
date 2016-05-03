@@ -5,6 +5,7 @@ from mpl_toolkits.mplot3d import Axes3D
 import math
 from sympy import *
 from matplotlib import cm
+import sys
 
 xu = [Symbol('x' + str(i)) for i in range(2)]
 
@@ -24,6 +25,36 @@ def func(y, t):
 
 def euclidDistance3D(a, b):
 	return math.sqrt((a[0] - b[0]) ** 2 + (a[1] - b[1]) ** 2 + (z.subs(xu[0], a[0]).subs(xu[1], a[1]) - z.subs(xu[0], b[0]).subs(xu[1], b[1])) ** 2)
+
+def findNextMinimaOnTraj(currentPosOnTraj, traj, goal):
+	beforeDistance = float("inf")
+	currentDistance = 0.0
+	for	i in range(currentPosOnTraj, len(traj[:, 0])):
+		currentDistance = euclidDistance3D(goal, traj[i, 2:])
+		if currentDistance < beforeDistance:
+			beforeDistance = currentDistance
+		else:
+			return [i - 1, beforeDistance]
+	return [sys.maxsize, float("inf")]
+
+def findNextMaximaOnTraj(currentPosOnTraj, traj, goal):
+	beforeDistance = float("inf")
+	currentDistance = 0.0
+	for	i in range(currentPosOnTraj, len(traj[:, 0])):
+		currentDistance = euclidDistance3D(goal, traj[i, 2:])
+		if currentDistance >= beforeDistance:
+			beforeDistance = currentDistance
+		else:
+			return [i - 1, beforeDistance]
+	return [sys.maxsize, float("inf")]
+
+def findNthMinimaOnTraj(n, traj, goal):
+	minima = [0, 0]
+	maxima = [0, 0]
+	for i in range(n):
+		minima = findNextMinimaOnTraj(maxima[0], traj, goal)
+		maxima = findNextMaximaOnTraj(minima[0], traj, goal)
+	return findNextMinimaOnTraj(maxima[0], traj, goal)
 
 def firstMinimaOnTraj(goal, traj, step):
 	beforeDistance = float("inf")
@@ -94,10 +125,12 @@ def firstMinimaOrSecondMinima(start, theta, t, goal):
 	y0 = v0 + start
 	traj = odeint(func, y0, t)
 	
-	fMOT = firstMinimaOnTraj(goal, traj, t[1] - t[0])
-	sMOT = secondMinimaOnTraj(goal, traj, t[1] - t[0])
+	#	fMOT = firstMinimaOnTraj(goal, traj, t[1] - t[0])
+	#	sMOT = secondMinimaOnTraj(goal, traj, t[1] - t[0])
+	fMOT = findNthMinimaOnTraj(0, traj, goal)
+	sMOT = findNthMinimaOnTraj(1, traj, goal)
 	
-	if fMOT[0] <= sMOT[0]:
+	if fMOT[1] <= sMOT[1]:
 		return 0
 	else:
 		return 1
