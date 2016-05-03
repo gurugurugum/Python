@@ -7,7 +7,7 @@ goal = [0, 5]
 theta = math.atan2(goal[1] - start[1], goal[0] - start[0])
 
 searchRange = euclidDistance3D(start, goal) ** 2
-step = 0.01
+step = searchRange / 10000
 t = np.arange(0, searchRange, step)
 
 angleStep = 0.1
@@ -56,11 +56,11 @@ fig = plt.figure()
 ax = fig.gca(projection = '3d')
 plt.hold(True)
 
-x_surf=np.arange(-5, 5, 0.01)                # generate a mesh
-y_surf=np.arange(-5, 5, 0.01)
-x_surf, y_surf = np.meshgrid(x_surf, y_surf)
-z_surf = x_surf ** 2 + y_surf ** 2             # ex. function, which depends on x and y
-ax.plot_surface(x_surf, y_surf, z_surf, cmap=cm.hot);    # plot a 3d surface plot
+#x_surf=np.arange(-5, 5, 0.01)                # generate a mesh
+#y_surf=np.arange(-5, 5, 0.01)
+#x_surf, y_surf = np.meshgrid(x_surf, y_surf)
+#z_surf = x_surf ** 2 + y_surf ** 2             # ex. function, which depends on x and y
+#ax.plot_surface(x_surf, y_surf, z_surf, cmap=cm.hot);    # plot a 3d surface plot
 
 ax.plot(traj[:, 2], traj[:, 3], height[:])
 #plt.plot(traj[:, 2], traj[:, 3])
