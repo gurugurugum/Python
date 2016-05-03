@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 import math
 from sympy import *
+from matplotlib import cm
 
 xu = [Symbol('x' + str(i)) for i in range(2)]
 
@@ -24,7 +25,7 @@ def func(y, t):
 def euclidDistance3D(a, b):
 	return math.sqrt((a[0] - b[0]) ** 2 + (a[1] - b[1]) ** 2 + (z.subs(xu[0], a[0]).subs(xu[1], a[1]) - z.subs(xu[0], b[0]).subs(xu[1], b[1])) ** 2)
 
-def firstMinimaOnTraj(goal, traj):
+def firstMinimaOnTraj(goal, traj, step):
 	beforeDistance = float("inf")
 	currentDistance = 0.0
 	for	i in range(len(traj[:, 0])):
@@ -35,7 +36,7 @@ def firstMinimaOnTraj(goal, traj):
 			return [beforeDistance, i * step]
 	return [float("inf"), float("inf")]
 
-def firstMiximaOnTraj(goal, traj):
+def firstMiximaOnTraj(goal, traj, step):
 	beforeDistance = float("inf")
 	currentDistance = 0.0
 	pos = 0
@@ -55,7 +56,7 @@ def firstMiximaOnTraj(goal, traj):
 			return [beforeDistance, i * step]
 	return [float("inf"), float("inf")]
 
-def secondMinimaOnTraj(goal, traj):
+def secondMinimaOnTraj(goal, traj, step):
 	beforeDistance = float("inf")
 	currentDistance = 0.0
 	pos = 0
@@ -93,8 +94,8 @@ def firstMinimaOrSecondMinima(start, theta, t, goal):
 	y0 = v0 + start
 	traj = odeint(func, y0, t)
 	
-	fMOT = firstMinimaOnTraj(goal, traj)
-	sMOT = secondMinimaOnTraj(goal, traj)
+	fMOT = firstMinimaOnTraj(goal, traj, t[1] - t[0])
+	sMOT = secondMinimaOnTraj(goal, traj, t[1] - t[0])
 
 	if fMOT[0] <= sMOT[0]:
 		return 0
@@ -107,18 +108,18 @@ def positiveRotOrNegativeRot(start, theta, angleStep, t, goal, fOS):
 	trajP = odeint(func, y0, t)
 	mOTP = [0, 0]
 	if fOS == 0:
-		mOTP = firstMinimaOnTraj(goal, trajP)
+		mOTP = firstMinimaOnTraj(goal, trajP, t[1] - t[0])
 	else:
-		mOTP = secondMinimaOnTraj(goal, trajP)
+		mOTP = secondMinimaOnTraj(goal, trajP, t[1] - t[0])
 
 	v0 = unitVecOfDirection(theta - angleStep, start)
 	y0 = v0 + start
 	trajN = odeint(func, y0, t)
 	mOTN = [0, 0]
 	if fOS == 0:
-		mOTN = firstMinimaOnTraj(goal, trajN)
+		mOTN = firstMinimaOnTraj(goal, trajN, t[1] - t[0])
 	else:
-		mOTN = secondMinimaOnTraj(goal, trajN)
+		mOTN = secondMinimaOnTraj(goal, trajN, t[1] - t[0])
 
 	if mOTP[0] < mOTN[0]:
 		return +1
@@ -126,7 +127,7 @@ def positiveRotOrNegativeRot(start, theta, angleStep, t, goal, fOS):
 		return -1
 
 start = [5, 0]
-goal = [-5, 0]
+goal = [0, 5]
 theta = math.atan2(goal[1] - start[1], goal[0] - start[0])
 
 searchRange = euclidDistance3D(start, goal) ** 2
@@ -140,16 +141,17 @@ currentDistance = 0.0
 result = 0.0
 fOS = firstMinimaOrSecondMinima(start, theta, t, goal)
 angleStep = angleStep * positiveRotOrNegativeRot(start, theta, angleStep, t, goal, fOS)
-for i in range(10000):
+#for i in range(10000):
+while 1:
 	v0 = unitVecOfDirection(theta, start)
 	y0 = v0 + start
 	traj = odeint(func, y0, t)
 	
 	mOT = [0, 0]
 	if fOS == 0:
-		mOT = firstMinimaOnTraj(goal, traj)
+		mOT = firstMinimaOnTraj(goal, traj, t[1] - t[0])
 	else:
-		mOT = secondMinimaOnTraj(goal, traj)
+		mOT = secondMinimaOnTraj(goal, traj, t[1] - t[0])
 	currentDistance = mOT[0]
 	distanceFromStart = mOT[1]
 	result = distanceFromStart
@@ -159,7 +161,7 @@ for i in range(10000):
 	if currentDistance < beforeDistance:
 		beforeDistance = currentDistance
 		theta += angleStep
-	elif currentDistance - beforeDistance < step:
+	elif currentDistance < beforeDistance + step:
 		break
 	else:
 		beforeDistance = currentDistance
@@ -180,6 +182,14 @@ height = [z.subs(xu[0], a).subs(xu[1], b) for a, b in zip(traj[:, 2], traj[:, 3]
 
 fig = plt.figure()
 ax = fig.gca(projection = '3d')
+plt.hold(True)
+
+x_surf=np.arange(-5, 5, 0.01)                # generate a mesh
+y_surf=np.arange(-5, 5, 0.01)
+x_surf, y_surf = np.meshgrid(x_surf, y_surf)
+z_surf = x_surf ** 2 + y_surf ** 2             # ex. function, which depends on x and y
+ax.plot_surface(x_surf, y_surf, z_surf, cmap=cm.hot);    # plot a 3d surface plot
+
 ax.plot(traj[:, 2], traj[:, 3], height[:])
 #plt.plot(traj[:, 2], traj[:, 3])
 plt.show()
