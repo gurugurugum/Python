@@ -2,20 +2,20 @@ import sys
 sys.path.append('/Users/kazuma/Documents/Python')
 from ODE.CurvedSurfaceLength_Funcs import *
 
-start = [5, 0]
-goal = [0, 5]
+start = [5.5, 0]
+goal = [-5.5, 0]
 theta = math.atan2(goal[1] - start[1], goal[0] - start[0])
 
 searchRange = euclidDistance3D(start, goal) ** 2
-step = searchRange / 10000
+step = 0.01
 t = np.arange(0, searchRange, step)
 
-angleStep = 0.1
+angleStep = 0.01
 angleStepStep = 0.1
-beforeDistance = searchRange ** 2
+beforeDistance = float("inf")
 currentDistance = 0.0
 result = 0.0
-fOS = firstMinimaOrSecondMinima(start, theta, t, goal)
+fOS = firstLocalMinimumOrSecondLocalMinimum(start, theta, t, goal)
 angleStep = angleStep * positiveRotOrNegativeRot(start, theta, angleStep, t, goal, fOS)
 #for i in range(10000):
 while 1:
@@ -23,17 +23,18 @@ while 1:
 	y0 = v0 + start
 	traj = odeint(func, y0, t)
 	
-	mOT = findNthMinimaOnTraj(fOS, traj, goal)
+	mOT = findNthLocalMinimumOnTraj(fOS, traj, goal)
 	distanceFromStart = mOT[0] * step
 	result = distanceFromStart
 	currentDistance = mOT[1]
-	print(currentDistance)
-#	print(firstMinimaOnTraj(goal, traj)[0])
-#	print(secondMinimaOnTraj(goal, traj)[0])
+	print(mOT, traj[mOT[0], 2], traj[mOT[0], 3])
+#	print(firstLocalMinimumOnTraj(goal, traj)[0])
+#	print(secondLocalMinimumOnTraj(goal, traj)[0])
 	if currentDistance < beforeDistance:
 		beforeDistance = currentDistance
 		theta += angleStep
 	elif currentDistance < beforeDistance + step:
+		theta -= angleStep
 		break
 	else:
 		beforeDistance = currentDistance

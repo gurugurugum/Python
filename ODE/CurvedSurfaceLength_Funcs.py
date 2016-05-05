@@ -10,7 +10,7 @@ import sys
 xu = [Symbol('x' + str(i)) for i in range(2)]
 
 #z = sqrt(10000 - xu[0] ** 2 - xu[1] ** 2)
-z = xu[0] ** 2 + xu[1] ** 2
+z = ((xu[0] - 5) ** 2 * (xu[0] + 5) ** 2 + xu[1] ** 4) / 5 ** 4
 
 dxu = [Symbol('dx' + str(i)) for i in range(2)]
 g = dxu[0] ** 2 + dxu[1] ** 2 + (z.diff(xu[0]) * dxu[0] + z.diff(xu[1]) * dxu[1]) ** 2
@@ -26,7 +26,7 @@ def func(y, t):
 def euclidDistance3D(a, b):
 	return math.sqrt((a[0] - b[0]) ** 2 + (a[1] - b[1]) ** 2 + (z.subs(xu[0], a[0]).subs(xu[1], a[1]) - z.subs(xu[0], b[0]).subs(xu[1], b[1])) ** 2)
 
-def findNextMinimaOnTraj(currentPosOnTraj, traj, goal):
+def findNextLocalMinimumOnTraj(currentPosOnTraj, traj, goal):
 	beforeDistance = float("inf")
 	currentDistance = 0.0
 	for	i in range(currentPosOnTraj, len(traj[:, 0])):
@@ -37,26 +37,41 @@ def findNextMinimaOnTraj(currentPosOnTraj, traj, goal):
 			return [i - 1, beforeDistance]
 	return [sys.maxsize, float("inf")]
 
-def findNextMaximaOnTraj(currentPosOnTraj, traj, goal):
-	beforeDistance = float("inf")
+def findNextLocalMaximumOnTraj(currentPosOnTraj, traj, goal):
+	beforeDistance = -1.0
 	currentDistance = 0.0
 	for	i in range(currentPosOnTraj, len(traj[:, 0])):
 		currentDistance = euclidDistance3D(goal, traj[i, 2:])
+		#		print(currentDistance)
 		if currentDistance >= beforeDistance:
 			beforeDistance = currentDistance
 		else:
 			return [i - 1, beforeDistance]
 	return [sys.maxsize, float("inf")]
 
-def findNthMinimaOnTraj(n, traj, goal):
-	minima = [0, 0]
-	maxima = [0, 0]
+def findNthLocalMinimumOnTraj(n, traj, goal):
+	minimum = [0, 0]
+	maximum = [0, 0]
 	for i in range(n):
-		minima = findNextMinimaOnTraj(maxima[0], traj, goal)
-		maxima = findNextMaximaOnTraj(minima[0], traj, goal)
-	return findNextMinimaOnTraj(maxima[0], traj, goal)
+		minimum = findNextLocalMinimumOnTraj(maximum[0], traj, goal)
+		maximum = findNextLocalMaximumOnTraj(minimum[0], traj, goal)
+	return findNextLocalMinimumOnTraj(maximum[0], traj, goal)
 
-def firstMinimaOnTraj(goal, traj, step):
+def findAllLocalMinimaOnTraj(traj, goal):
+	maximum = [0, 0]
+	minimum = findNextLocalMinimumOnTraj(maximum[0], traj, goal)
+	minima = [minimum]
+	while minima[-1][1] < float("inf"):
+		#	for i in range(5):
+		print(minimum, traj[minimum[0], 2], traj[minimum[0], 3])
+		maximum = findNextLocalMaximumOnTraj(minimum[0], traj, goal)
+		if maximum[1] != float("inf"):
+			print(maximum, traj[maximum[0], 2], traj[maximum[0], 3])
+		minimum = findNextLocalMinimumOnTraj(maximum[0], traj, goal)
+		minima.append(minimum)
+	return minima[:-1]
+
+def firstLocalMinimumOnTraj(goal, traj, step):
 	beforeDistance = float("inf")
 	currentDistance = 0.0
 	for	i in range(len(traj[:, 0])):
@@ -67,7 +82,7 @@ def firstMinimaOnTraj(goal, traj, step):
 			return [beforeDistance, i * step]
 	return [float("inf"), float("inf")]
 
-def firstMiximaOnTraj(goal, traj, step):
+def firstLocalMaximumOnTraj(goal, traj, step):
 	beforeDistance = float("inf")
 	currentDistance = 0.0
 	pos = 0
@@ -87,7 +102,7 @@ def firstMiximaOnTraj(goal, traj, step):
 			return [beforeDistance, i * step]
 	return [float("inf"), float("inf")]
 
-def secondMinimaOnTraj(goal, traj, step):
+def secondLocalMinimumOnTraj(goal, traj, step):
 	beforeDistance = float("inf")
 	currentDistance = 0.0
 	pos = 0
@@ -120,29 +135,31 @@ def unitVecOfDirection(theta, place):
 	mag = sum([sum([gll[d1][d2].subs(xu[0], place[0]).subs(xu[1], place[1]) * v0[d1] * v0[d2] for d1 in range(2)]) for d2 in range(2)])
 	return list(map(lambda n:n / math.sqrt(mag), v0))
 
-def firstMinimaOrSecondMinima(start, theta, t, goal):
+def firstLocalMinimumOrSecondLocalMinimum(start, theta, t, goal):
 	v0 = unitVecOfDirection(theta, start)
 	y0 = v0 + start
 	traj = odeint(func, y0, t)
 	
-	fMOT = findNthMinimaOnTraj(0, traj, goal)
-	sMOT = findNthMinimaOnTraj(1, traj, goal)
-	
-	if fMOT[1] <= sMOT[1]:
-		return 0
-	else:
-		return 1
+	#	fMOT = findNthLocalMinimumOnTraj(0, traj, goal)
+	#	sMOT = findNthLocalMinimumOnTraj(1, traj, goal)
+	minima = findAllLocalMinimaOnTraj(traj, goal)
+
+#	if fMOT[1] <= sMOT[1]:
+#		return 0
+#	else:
+#		return 1
+	return minima.index(min(minima, key=(lambda x: x[1])))
 
 def positiveRotOrNegativeRot(start, theta, angleStep, t, goal, fOS):
 	v0 = unitVecOfDirection(theta + angleStep, start)
 	y0 = v0 + start
 	trajP = odeint(func, y0, t)
-	mOTP = findNthMinimaOnTraj(fOS, trajP, goal)
+	mOTP = findNthLocalMinimumOnTraj(fOS, trajP, goal)
 	
 	v0 = unitVecOfDirection(theta - angleStep, start)
 	y0 = v0 + start
 	trajN = odeint(func, y0, t)
-	mOTN = findNthMinimaOnTraj(fOS, trajN, goal)
+	mOTN = findNthLocalMinimumOnTraj(fOS, trajN, goal)
 	
 	if mOTP[1] < mOTN[1]:
 		return +1
