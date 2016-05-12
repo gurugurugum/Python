@@ -2,8 +2,8 @@ import sys
 sys.path.append('/Users/kazuma/Documents/Python')
 from ODE.CurvedSurfaceLength_Funcs import *
 
-start = [5.5, 0]
-goal = [-5.5, 0]
+start = [5.5, 1]
+goal = [-5.5, -1]
 theta = math.atan2(goal[1] - start[1], goal[0] - start[0])
 
 searchRange = euclidDistance3D(start, goal) ** 2
