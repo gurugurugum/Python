@@ -41,8 +41,8 @@ if __name__ == '__main__':
 	i = 1
 	Al = [A(i)]
 	p = prime(i)
-	while p <= 3000000:
-		print(i, p, Al[-1])
+	while p <= 300000:
+		print(i, p)
 		for j in range(len(Al) - 1):
 			if Al[j] % p == 0:
 				sum += p
@@ -51,3 +51,5 @@ if __name__ == '__main__':
 		p = prime(i)
 		Al.append(A(i))
 	print(sum)
+
+#Answer:326227335
