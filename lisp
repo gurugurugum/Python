@@ -1,20 +1,26 @@
-import sys
+(defun sum (n m)
+	(+ n m)
+)
 
-input = sys.argv[1]
+(defun sub (n m)
+	(- n m)
+)
 
-ri = input.replace("(", " ( ").replace(")", " ) ")
-si = list(filter(lambda x: len(x) > 0, ri.split(" ")))
+(defun fibo (n)
+	(if (< n 3)
+		1
+		(+ (fibo (sub n 1)) (fibo (sub n 2)) )
+	)
+)
 
-res = 0
-lbc = 0
-lbp = 0
-while(si[lbp] == "("):
-    lbc += 1
-    lbp += 1
-lbp -= 1
-rbp = lbp + 1
-while(si[lbp] == "("):
-    lbc+=1
-    lbp+=1
+(defun ack (n m)
+	(if (< m 1)
+		(+ n 1)
+		(if (< n 1)
+			(ack (- m 1) 1)
+			(ack (- m 1) (ack m (- n 1)))
+		)
+	)
+)
 
-print(lbc)
+(fibo 7)
