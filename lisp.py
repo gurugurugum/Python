@@ -34,6 +34,20 @@ def passThroughDefun(input, startPlace):
 
 	return place
 
+def passThroughArgDefs(input, startPlace):
+	tmp = findLastLeftBracketOfContinuingLeftBrackets(input, startPlace)
+	lbc = tmp[0] #"("の数
+	lbp = tmp[1] #最後に読んだ"("の場所
+	place = lbp
+	
+	if input[place + 1] == "=":
+		while lbc > 0:
+			tmp = findRightBracket(input, place + 1)
+			lbc += tmp[0] - 1
+			place = tmp[1]
+
+	return place
+
 def isABracket(token):
 	return token == "(" or token == ")"
 
@@ -199,17 +213,33 @@ def findNextNewLine(list, startPlace):
 		i += 1
 	return i
 
+def deleteComments(list):
+	i = 0
+	while i < len(list):
+		collonPlace = findNextCollon(list, i)
+		newLinePlace = findNextNewLine(list, collonPlace)
+		del list[collonPlace:newLinePlace + 1]
+		i = collonPlace
+
 fileName = sys.argv[1]
 f = open(fileName, 'r')
 input = f.read()
 
 ri = input.replace("(", " ( ").replace(")", " ) ").replace("\n", " \n ").replace("\t", " \t ").replace(";", " ; ")
 si = ri.split(" ")
+deleteComments(si)
 fi = list(filter(lambda x: len(x) > 0 and x != "\n" and x != "\t" , si))
 
 res = 0 #結果
 
 place = -1 #今読んでるとこ
+rowArgDefs = [] #変数定義たち
+while fi[findLastLeftBracketOfContinuingLeftBrackets(fi, place + 1)[1] + 1] == "=":
+	placeBefore = place + 1
+	place = passThroughArgDefs(fi, place + 1)
+	rowArgDefs.append(fi[placeBefore:place])
+for argDef in rowArgDefs:
+	fi[place + 1:] = replace(fi[place + 1:], argDef[2], argDef[3])
 rowDefuns = [] #関数定義たち
 while fi[findLastLeftBracketOfContinuingLeftBrackets(fi, place + 1)[1] + 1] == "defun":
 	placeBefore = place + 1
