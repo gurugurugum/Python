@@ -3,7 +3,7 @@ import functools
 import matplotlib.pyplot as plt
 
 def inner_prod(dx, v1, v2):
-	return np.sum(v1*v2*dx)
+	return np.sum(np.conjugate(v1)*v2*dx)
 
 def norm(dx, v):
 	return np.sqrt(inner_prod(dx, v, v))
@@ -61,12 +61,18 @@ class System:
 		xu = self.x < u
 		xlu = xl*xu
 		plt.plot(self.x[xlu], self.VL[xlu], label="potential")
+		plt.legend(loc='upper left')
 
 	def plotPotential(self):
 		plt.plot(self.x[self.xlu], self.VL[self.xlu], label="potential")
+		plt.legend(loc='upper left')
+
+	def getWFOf(self, t):
+		return functools.reduce(lambda x,y:x+y, ((self.coeffs*(lambda x:np.e**(-1j*x*t))(self.w))*(self.vs.T)).T)
 
 	def plotWFOf(self, t):
-		plt.plot(self.x[self.xlu], np.absolute(functools.reduce(lambda x,y:x+y, ((self.coeffs*(lambda x:np.e**(-1j*x*t))(self.w))*(self.vs.T)).T))[self.xlu], label="t="+str(t))
+		plt.plot(self.x[self.xlu], np.absolute(self.getWFOf(t))[self.xlu], label="t="+str(t))
+		plt.legend(loc='upper left')
 
 
 
