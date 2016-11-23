@@ -25,12 +25,12 @@ def solveSchroedinger(L, N, V):
 	w, v = np.linalg.eigh(H)
 	return x, dx, w, normalize_vs(dx, v.T), Vl
 
-def getCoeffs(dx, T, vs):
-	return np.array(list(map(lambda v:inner_prod(dx, T, v), vs)))
+def getCoeffs(dx, vs, T):
+	return np.array(list(map(lambda v:inner_prod(dx, v, T), vs)))
 
 def fOfT(f0, L, N, V, t):
 	x, dx, w, vs, Vl = solveSchroedinger(L, N, V)
-	return functools.reduce(lambda x,y:x+y, ((getCoeffs(dx, f0, vs)*(lambda x:np.e**(-1j*x*t))(w))*(vs.T)).T)
+	return functools.reduce(lambda x,y:x+y, ((getCoeffs(dx, vs, f0)*(lambda x:np.e**(-1j*x*t))(w))*(vs.T)).T)
 
 class System:
 	def __init__(self, L, N, V):
@@ -49,7 +49,7 @@ class System:
 	def setWF0(self, f):
 		self.wF0L = np.array(list(map(f,self.x)))
 		self.wF0L = normalize(self.dx, self.wF0L)
-		self.coeffs = getCoeffs(self.dx, self.wF0L, self.vs)
+		self.coeffs = getCoeffs(self.dx, self.vs, self.wF0L)
 
 	def setBoundary(self, l, u):
 		xl = self.x > l
