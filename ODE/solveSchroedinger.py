@@ -1,5 +1,6 @@
 import numpy as np
 import functools
+import matplotlib.pyplot as plt
 
 def inner_prod(dx, v1, v2):
 	return np.sum(v1*v2*dx)
@@ -30,3 +31,43 @@ def getCoeffs(dx, T, vs):
 def fOfT(f0, L, N, V, t):
 	x, dx, w, vs, Vl = solveSchroedinger(L, N, V)
 	return functools.reduce(lambda x,y:x+y, ((getCoeffs(dx, f0, vs)*(lambda x:np.e**(-1j*x*t))(w))*(vs.T)).T)
+
+class System:
+	def __init__(self, L, N, V):
+		self.L = L
+		self.N = N
+		self.x, self.dx = np.linspace(-self.L/2, self.L/2, self.N), self.L / self.N
+		self.VL = np.array(list(map(V,self.x)))
+		K = np.eye(self.N, self.N)
+		K_sub = np.vstack((K[1:], np.array([0] * self.N)))
+		K = self.dx**-2 * (2 * K - K_sub - K_sub.T)
+		VM = np.diag(self.VL)
+		H = (K / 2 + VM)
+		self.w, self.vs = np.linalg.eigh(H)
+		self.vs = normalize_vs(self.dx, self.vs.T)
+
+	def setWF0(self, f):
+		self.wF0L = np.array(list(map(f,self.x)))
+		self.wF0L = normalize(self.dx, self.wF0L)
+		self.coeffs = getCoeffs(self.dx, self.wF0L, self.vs)
+
+	def setBoundary(self, l, u):
+		xl = self.x > l
+		xu = self.x < u
+		self.xlu = xl*xu
+
+	def plotPotential(self, l, u):
+		xl = self.x > l
+		xu = self.x < u
+		xlu = xl*xu
+		plt.plot(self.x[xlu], self.VL[xlu], label="potential")
+
+	def plotPotential(self):
+		plt.plot(self.x[self.xlu], self.VL[self.xlu], label="potential")
+
+	def plotWFOf(self, t):
+		plt.plot(self.x[self.xlu], np.absolute(functools.reduce(lambda x,y:x+y, ((self.coeffs*(lambda x:np.e**(-1j*x*t))(self.w))*(self.vs.T)).T))[self.xlu], label="t="+str(t))
+
+
+
+
