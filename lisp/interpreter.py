@@ -40,7 +40,7 @@ def passThroughArgDefs(input, startPlace):
 	lbp = tmp[1] #最後に読んだ"("の場所
 	place = lbp
 	
-	if input[place + 1] == "=":
+	if input[place + 1] == "define":
 		while lbc > 0:
 			tmp = findRightBracket(input, place + 1)
 			lbc += tmp[0] - 1
@@ -234,7 +234,7 @@ res = 0 #結果
 
 place = -1 #今読んでるとこ
 rowArgDefs = [] #変数定義たち
-while fi[findLastLeftBracketOfContinuingLeftBrackets(fi, place + 1)[1] + 1] == "=":
+while fi[findLastLeftBracketOfContinuingLeftBrackets(fi, place + 1)[1] + 1] == "define":
 	placeBefore = place + 1
 	place = passThroughArgDefs(fi, place + 1)
 	rowArgDefs.append(fi[placeBefore:place])
@@ -259,12 +259,12 @@ for rowDefun in rowDefuns:
 #expToCompute = replaceFuncs(expToCompute)
 
 while len(expToCompute) > 1:
-	print("computing...")
 	print(" ".join(expToCompute))
+	print("computing...")
 	expToCompute = computeComputableExpressions(expToCompute)
 	if len(expToCompute) > 1:
-		print("replacing...")
 		print(" ".join(expToCompute))
+		print("replacing...")
 		expToCompute = replaceFuncs(expToCompute)
 
 #print(" ".join(si), place, len(si), rowDefuns, analdDefun, expToCompute)

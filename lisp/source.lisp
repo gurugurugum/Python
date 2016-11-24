@@ -1,5 +1,5 @@
-(= a 1)
-(= b 1)
+(define a 1)
+(define b 1)
 
 (defun sum (n m)
 	(+ n m)
@@ -20,7 +20,7 @@
 (defun fibo (n)
 	(if (< n 3)
 		1
-		(+ (fibo (- n 1)) (fibo (- n 2)) )
+		(+ (fibo (sub n 1)) (fibo (sub n 2)) )
 	)
 )
 
@@ -35,4 +35,8 @@
 )
 
 ;(ack 1 1)
-(fibo (suma (sumb 7)))
+(fibo (+ 1 (* a b 3)))
+
+;(for (i 1 10)
+;	(= a (+ a 1))
+;)
