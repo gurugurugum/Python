@@ -46,8 +46,13 @@ class System:
 		self.w, self.vs = np.linalg.eigh(H)
 		self.vs = normalize_vs(self.dx, self.vs.T)
 
-	def setWF0(self, f):
+	def setWF0ByFunc(self, f):
 		self.wF0L = np.array(list(map(f,self.x)))
+		self.wF0L = normalize(self.dx, self.wF0L)
+		self.coeffs = getCoeffs(self.dx, self.vs, self.wF0L)
+
+	def setWF0ByList(self, l):
+		self.wF0L = l
 		self.wF0L = normalize(self.dx, self.wF0L)
 		self.coeffs = getCoeffs(self.dx, self.vs, self.wF0L)
 
