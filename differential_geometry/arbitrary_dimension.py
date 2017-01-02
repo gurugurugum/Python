@@ -1,18 +1,42 @@
 from sympy import *
 
-dim=4
+dim = 4
+
+G = Symbol('G')
+M = Symbol('M')
 
 def set_dimension(n):
-	global dim
-	dim =n
+    global dim
+    dim = n
 
-xu=[Symbol('x'+str(i)) for i in range(dim)]
+xu = [Symbol('x'+str(i)) for i in range(dim)]
 
 #gll=[[Function('g'+str(i)+str(j))(xu[0],xu[1]) for j in range(dim)] for i in range(dim)]
 gll=[[Function('g'+str(i)+str(j))(*xu) for j in range(dim)] for i in range(dim)]
 for i in range(dim):
-	for j in range(i+1,dim):
-		gll[j][i]=gll[i][j]
+    for j in range(i+1, dim):
+        gll[j][i]=gll[i][j]
+#gll = [[-(1-2*G*M/xu[1]),0,0,0],[0,(1-2*G*M/xu[1]),0,0],[0,0,xu[1]**2,0],[0,0,0,xu[1]**2*sin(xu[2])]]
+
+def subsMetric(exp):
+    retVal = exp
+    retVal = retVal.subs(gll[0][0],    -(1-2*G*M/xu[1]))
+    retVal = retVal.subs(gll[0][1], 0)
+    retVal = retVal.subs(gll[0][2], 0)
+    retVal = retVal.subs(gll[0][3], 0)
+    retVal = retVal.subs(gll[1][0], 0)
+    retVal = retVal.subs(gll[1][1],     (1-2*G*M/xu[1]))
+    retVal = retVal.subs(gll[1][2], 0)
+    retVal = retVal.subs(gll[1][3], 0)
+    retVal = retVal.subs(gll[2][0], 0)
+    retVal = retVal.subs(gll[2][1], 0)
+    retVal = retVal.subs(gll[2][2],            xu[1]**2)
+    retVal = retVal.subs(gll[2][3], 0)
+    retVal = retVal.subs(gll[3][0], 0)
+    retVal = retVal.subs(gll[3][1], 0)
+    retVal = retVal.subs(gll[3][2], 0)
+    retVal = retVal.subs(gll[3][3], xu[1]**2*sin(xu[2]))
+    return retVal
 
 guu=Matrix(gll).inv().tolist()
 
