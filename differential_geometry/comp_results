@@ -1,0 +1,12 @@
+simplify(simplify(ad.subsMetricReggeWheel(ad.laplacian(f/ad.r)).doit()).subs(ad.r.diff(ad.xu[1]),1-2*ad.G*ad.M/ad.r).doit().subs(ad.r.diff(ad.xu[1]),1-2*ad.G*ad.M/ad.r))
+=(-4*G**2*M**2*f(x0, x1, x2, x3) + 2*G*M*f(x0, x1, x2, x3)*r(x1) + 2*G*M*r(x1)*Derivative(f(x0, x1, x2, x3), x2, x2) + 2*G*M*r(x1)*Derivative(f(x0, x1, x2, x3), x3, x3)/sin(x2)**2 + sqrt((4*G**2*M**2 - 4*G*M*r(x1) + r(x1)**2)*r(x1)**2*sin(x2)**2)*cos(x2)*Derivative(f(x0, x1, x2, x3), x2)/sin(x2)**2 + r(x1)**4*Derivative(f(x0, x1, x2, x3), x0, x0) - r(x1)**4*Derivative(f(x0, x1, x2, x3), x1, x1) - r(x1)**2*Derivative(f(x0, x1, x2, x3), x2, x2) - r(x1)**2*Derivative(f(x0, x1, x2, x3), x3, x3)/sin(x2)**2)/((2*G*M - r(x1))*r(x1)**4)
+
+toBeTarget = (f.diff(ad.xu[0],2)-f.diff(ad.xu[1],2)-(1-2*ad.G*ad.M/ad.r)*(1/ad.r**2/sin(ad.xu[2])*(sin(ad.xu[2])*f.diff(ad\n.xu[2])).diff(ad.xu[2])+1/ad.r**2/sin(ad.xu[2])**2*f.diff(ad.xu[3],2)-2*ad.G*ad.M/ad.r**3*f))
+
+laplaced_f_over_r = simplify(ad.subsMetricReggeWheel(ad.laplacian(f/ad.r)).doit().subs(ad.r.diff(ad.xu[1]),1-2*ad.G*ad.M/ad.r).doit().subs(ad.r.diff(ad.xu[1]),1-2*ad.G*ad.M/ad.r).doit())
+
+laplaced_f_over_r_rasceled = simplify(laplaced_f_over_r/laplaced_f_over_r.diff(f.diff(ad.xu[0],2)))
+
+toBeTarget = f.diff(ad.xu[0],2) - f.diff(ad.xu[1],2) + (1-2*ad.G*ad.M/ad.r)*( - 1/ad.r**2/sin(ad.xu[2])*(sin(ad.xu[2])*f.diff(ad.xu[2])).diff(ad.xu[2]) - 1/ad.r**2/sin(ad.xu[2])**2*f.diff(ad.xu[3],2) + 2*ad.G*ad.M/ad.r**3*f)
+
+.subs(sqrt((2*ad.G*ad.M-ad.r)**2*ad.r**2*sin(ad.xu[2])**2),-(2*ad.G*ad.M-ad.r)*ad.r*sin(ad.xu[2]))
